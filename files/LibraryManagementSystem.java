@@ -149,6 +149,67 @@ class Teacher extends Member {
     }
 }
 
+// Library class
+class Library {
+    private List<Book> books;
+    private List<Member> members;
+    private Map<Book, Member> issuedBooks;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+    public Library() {
+        books = new ArrayList<>();
+        members = new ArrayList<>();
+        issuedBooks = new HashMap<>();
+    }
+
+    // Book Management
+    public void addBook(String id, String title, String author) {
+        if (id.isEmpty() || title.isEmpty() || author.isEmpty()) {
+            System.out.println("Book ID, title, and author cannot be empty!");
+            return;
+        }
+        books.add(new Book(id, title, author));
+        System.out.println("Book added: " + title);
+    }
+
+    public void deleteBook(String id) {
+        Book book = findBookById(id);
+        if (book != null) {
+            books.remove(book);
+            System.out.println("Book deleted: " + book.getTitle());
+        } else {
+            System.out.println("Book not found with ID: " + id);
+        }
+    }
+
+    public Book findBookById(String id) {
+        for (Book book : books) {
+            if (book.getId().equals(id)) {
+                return book;
+            }
+        }
+        return null;
+    }
+
+    public Book findBookByTitle(String title) {
+        for (Book book : books) {
+            if (book.getTitle().equalsIgnoreCase(title)) {
+                return book;
+            }
+        }
+        return null;
+    }
+
+    public Book findBookByAuthor(String author) {
+        for (Book book : books) {
+            if (book.getAuthor().equalsIgnoreCase(author)) {
+                return book;
+            }
+        }
+        return null;
+    }
+}   
+
 
 // Main class to test the library system
 public class LibraryManagementSystem {
