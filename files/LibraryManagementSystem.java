@@ -221,6 +221,94 @@ class Library {
         }
     }
 
+    // Member Management
+    public void registerMember(Member member) {
+        if (member.getId().isEmpty() || member.getName().isEmpty()) {
+            System.out.println("Member ID and name cannot be empty!");
+            return;
+        }
+        members.add(member);
+        System.out.println("Member registered: " + member.getName());
+    }
+
+    public Member findMemberById(String id) {
+        for (Member member : members) {
+            if (member.getId().equals(id)) {
+                return member;
+            }
+        }
+        return null;
+    }
+    
+    // Transaction Management
+    public void issueBook(String memberId, String bookId) {
+        Member member = findMemberById(memberId);
+        Book book = findBookById(bookId);
+        if (member != null && book != null) {
+            if (!book.isIssued()) {
+                int previousBorrowedCount = member.getBorrowedBooks().size();
+                member.borrowBook(book);
+
+                // If the number of books borrowed has not changed, then the book has not been issued
+                if (previousBorrowedCount == member.getBorrowedBooks().size()) {
+                    return;
+                }
+
+                issuedBooks.put(book, member);
+
+                // Calculate due date (7 days from issue date)
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(book.getIssueDate());
+                cal.add(Calendar.DAY_OF_MONTH, 7);
+                Date dueDate = cal.getTime();
+
+                System.out.println("Book Issued Successfully!");
+                System.out.println("Member: " + member.getName());
+                System.out.println("Book: " + book.getTitle());
+                System.out.println("Due Date: " + dateFormat.format(dueDate));
+            } else {
+                System.out.println("Book is already issued.");
+            }
+        } else {
+            System.out.println("Member or Book not found.");
+        }
+    }
+
+
+
+    public void returnBook(String memberId, String bookId) {
+        Member member = findMemberById(memberId);
+        Book book = findBookById(bookId);
+        if (member != null && book != null) {
+            if (issuedBooks.containsKey(book)) {
+                member.returnBook(book);
+                issuedBooks.remove(book);
+
+                double fine = book.calculateFine();
+                System.out.println("Book Returned Successfully!");
+                System.out.println("Member: " + member.getName());
+                System.out.println("Book: " + book.getTitle());
+                if (fine > 0) {
+                    System.out.println("Overdue Fine: $" + fine);
+                } else {
+                    System.out.println("No fine.");
+                }
+            } else {
+                System.out.println("Book was not issued to this member.");
+            }
+        } else {
+            System.out.println("Member or Book not found.");
+        }
+    }
+
+    // Report Generation
+    public void generateBooksReport() {
+        System.out.println("Books Report:");
+        for (Book book : books) {
+            System.out.println(book);
+        }
+    }
+
 }   
 
 
