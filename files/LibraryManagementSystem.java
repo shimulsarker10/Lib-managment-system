@@ -208,6 +208,19 @@ class Library {
         }
         return null;
     }
+
+    public void searchBook(String query) {
+        Book book = findBookById(query);
+        if (book == null) book = findBookByTitle(query);
+        if (book == null) book = findBookByAuthor(query);
+
+        if (book != null) {
+            System.out.println("Book Found: " + book);
+        } else {
+            System.out.println("No book found with the given information.");
+        }
+    }
+
 }   
 
 
