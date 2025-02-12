@@ -315,6 +315,90 @@ class Library {
 // Main class to test the library system
 public class LibraryManagementSystem {
     public static void main(String[] args) {
-        System.out.println("Shimul Sarker");
+        Library library = new Library();
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n--- Library Management System ---");
+            System.out.println("1. Add Book");
+            System.out.println("2. Delete Book");
+            System.out.println("3. Search Book");
+            System.out.println("4. Register Member");
+            System.out.println("5. Issue Book");
+            System.out.println("6. Return Book");
+            System.out.println("7. Generate Books Report");
+            System.out.println("8. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Book ID: ");
+                    String bookId = scanner.nextLine();
+                    System.out.print("Enter Book Title: ");
+                    String title = scanner.nextLine();
+                    System.out.print("Enter Book Author: ");
+                    String author = scanner.nextLine();
+                    library.addBook(bookId, title, author);
+                    break;
+                case 2:
+                    System.out.print("Enter Book ID to delete: ");
+                    String deleteBookId = scanner.nextLine();
+                    library.deleteBook(deleteBookId);
+                    break;
+                case 3:
+                    System.out.print("Enter Book ID, Title, or Author to search: ");
+                    String query = scanner.nextLine();
+                    library.searchBook(query);
+                    break;
+                case 4:
+                    System.out.print("Enter Member ID: ");
+                    String memberId = scanner.nextLine();
+                    System.out.print("Enter Member Name: ");
+                    String memberName = scanner.nextLine();
+                    System.out.print("Enter Member Type (1. Student / 2. Teacher): ");
+                    int memberType = scanner.nextInt();
+                    scanner.nextLine();
+                    if (memberType == 1) {
+                        library.registerMember(new Student(memberId, memberName));
+                    } else if (memberType == 2) {
+                        library.registerMember(new Teacher(memberId, memberName));
+                    } else {
+                        System.out.println("Invalid member type.");
+                    }
+                    break;
+                case 5:
+                    System.out.print("Enter Member ID: ");
+                    String issueMemberId = scanner.nextLine();
+                    System.out.print("Enter Book ID: ");
+                    String issueBookId = scanner.nextLine();
+                    library.issueBook(issueMemberId, issueBookId);
+                    break;
+                case 6:
+                    System.out.print("Enter Member ID: ");
+                    String returnMemberId = scanner.nextLine();
+                    System.out.print("Enter Book ID: ");
+                    String returnBookId = scanner.nextLine();
+                    library.returnBook(returnMemberId, returnBookId);
+                    break;
+                case 7:
+                    library.generateBooksReport();
+                    break;
+                case 8:
+                    System.out.print("Are you sure you want to exit? (yes/no): ");
+                    String confirm = scanner.nextLine().trim();
+                    if (confirm.equalsIgnoreCase("yes")) {
+                        System.out.println("Exiting...");
+                        choice = 8;
+                    }
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 8);
+
+        scanner.close();
     }
 }
